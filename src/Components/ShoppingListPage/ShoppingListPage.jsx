@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
 
 const ShoppingListPage = () => {
   const [items, setItems] = useState([]);
@@ -105,9 +106,7 @@ const ShoppingListPage = () => {
         ))}
       </ul>
     </div>
-    <footer className="bg-gray-200 text-center py-4">
-      © 2025 Shopping List. All rights reserved.
-    </footer>
+    <Footer/>
     </div>
 
   );

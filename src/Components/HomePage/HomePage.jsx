@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from "../Navbar/Navbar";
 import ShoppingImg from '../Images/main_shopping.jpeg'
+import Footer from '../Footer/Footer';
 
 const HomePage = () => {
   return (
@@ -21,9 +22,7 @@ const HomePage = () => {
       </button>
     </a>
     </main>
-    <footer className="bg-gray-200 text-center py-4">
-      © 2025 Shopping List. All rights reserved.
-    </footer>
+   <Footer/>
   </div>
   )
 }
