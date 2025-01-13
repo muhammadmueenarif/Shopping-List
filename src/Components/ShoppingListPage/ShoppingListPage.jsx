@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
+import LoggedInNavbar from "../Navbar/LoggedInNavbar";
 
 const ShoppingListPage = () => {
   const [items, setItems] = useState([]);
@@ -36,6 +37,8 @@ const ShoppingListPage = () => {
   );
 
   return (
+    
+   <div>
     <div>
           <div className="flex flex-col items-center bg-gray-100 min-h-screen p-4">
       <h1 className="text-2xl font-bold mb-4">Shopping List</h1>
@@ -108,6 +111,7 @@ const ShoppingListPage = () => {
     </div>
     <Footer/>
     </div>
+   </div>
 
   );
 };
