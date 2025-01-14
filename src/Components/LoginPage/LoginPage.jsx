@@ -26,17 +26,6 @@ const navigate = useNavigate();
         setLoading(false);
       }
 
-    // Simulate login logic and success login
-    // setTimeout(() => {
-    //   if (!emailOrUsername || !password) {
-    //     setError("All fields are required.");
-    //     setLoading(false);
-    //   } else {
-    //     console.log("Logged in with", emailOrUsername, password);
-    //     navigate("/shopping-list"); // Redirect to ShoppingListPage
-    //     setLoading(false);
-    //   }
-    // }, 1000);
   };
 
   return (

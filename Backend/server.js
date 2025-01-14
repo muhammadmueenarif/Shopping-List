@@ -1,12 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const userRoutes = require('./Routes/Users');
+const cors = require('cors');
 
 const app = express(); //initialize app
 const port = 5000; // You can choose any port you prefer
 
 // Middleware
 app.use(bodyParser.json());
+app.use(cors()); // Enable CORS for all routes
 app.use(bodyParser.urlencoded({ extended: true }));
 
 

@@ -25,15 +25,6 @@ const SignupPage = () => {
       setLoading(false); 
     }
 
-    // Simulate signup logic
-  //   setTimeout(() => {
-  //     if (!email || !username || !password) {
-  //       setError("All fields are required.");
-  //     } else {
-  //       console.log("Signed up with", email, username, password);
-  //     }
-  //     setLoading(false);
-  //   }, 1000);
   };
 
   return (
