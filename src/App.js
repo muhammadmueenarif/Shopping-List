@@ -11,7 +11,7 @@ import Navbar from './Components/Navbar/Navbar'; //for not logged in users
 import LoggedInNavbar from './Components/Navbar/LoggedInNavbar'; //for logged-in users
 
 function App() {
-  const isLoggedIn = true; // Replace this with your actual login state
+  const isLoggedIn = false; // Replace this with your actual login state
 
   return (
     

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import API from '../../api/api'; // Import the axios instance
+import Footer from "../Footer/Footer";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -7,24 +9,36 @@ const SignupPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    try { 
+      await API.post('/users/signup', { 
+        email, username, password 
+      }); 
+      alert("Signup successful! Please log in."); 
+    } catch (err) { 
+      setError(err.response ? err.response.data.error : "Error signing up"); 
+    } finally { 
+      setLoading(false); 
+    }
+
     // Simulate signup logic
-    setTimeout(() => {
-      if (!email || !username || !password) {
-        setError("All fields are required.");
-      } else {
-        console.log("Signed up with", email, username, password);
-      }
-      setLoading(false);
-    }, 1000);
+  //   setTimeout(() => {
+  //     if (!email || !username || !password) {
+  //       setError("All fields are required.");
+  //     } else {
+  //       console.log("Signed up with", email, username, password);
+  //     }
+  //     setLoading(false);
+  //   }, 1000);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+   <div>
+     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
       <form
         onSubmit={handleSignup}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full max-w-md"
@@ -72,6 +86,8 @@ const SignupPage = () => {
         </div>
       </form>
     </div>
+    <Footer/>
+   </div>
   );
 };
 

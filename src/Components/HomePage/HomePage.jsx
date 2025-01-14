@@ -6,7 +6,6 @@ import Footer from '../Footer/Footer';
 const HomePage = () => {
   return (
     <div>
-    <Navbar />
     <main className="flex flex-col items-center justify-center p-6">
       <img
         src={ShoppingImg}
