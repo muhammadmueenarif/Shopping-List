@@ -1,5 +1,7 @@
 const { db, admin } = require("../firebaseConfig");
+const multer = require('multer');
 const bcrypt = require("bcryptjs"); // Import bcrypt for password hashing
+const upload = multer({ dest: 'uploads/' }); // Set the destination for file uploads
 exports.signup = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -57,5 +59,60 @@ exports.login = async (req, res) => {
     res
       .status(500)
       .json({ error: "Error logging in user", details: error.message });
+  }
+};
+
+//update profile image and about
+exports.updateProfile = async (req, res) => { 
+  try { 
+    const { userId, about } = req.body; 
+    const profileImage = req.file ? req.file.path : null; 
+    const userRef = db.collection('users').doc(userId); 
+    const user = await userRef.get(); 
+    if (!user.exists) { 
+      return res.status(404).json({ error: "User not found" }); 
+    } 
+    const updateData = { about }; 
+    if (profileImage) { 
+      updateData.profileImage = profileImage; 
+    } await userRef.update(updateData); 
+    res.status(200).json({ message: "Profile updated successfully!" }); 
+  } catch (error) { 
+    console.error(error); // Log the error for debugging 
+    res.status(500).json({ error: "Error updating profile", details: error.message }); 
+  } 
+};
+
+exports.getProfile = async (req, res) => {
+  try {
+    // Extract userId from the request headers
+    const userId = req.headers['user-id']; // Read userId from the header
+
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is missing' });
+    }
+
+    const userRef = db.collection('users').doc(userId);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: 'User profile not found' });
+    }
+
+    return res.status(200).json(userDoc.data());
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    return res.status(500).json({ error: 'Error fetching user profile', details: error.message });
+  }
+};
+
+exports.validateToken = async (req, res) => {
+  const { token } = req.body;
+  try {
+    // Verify the token using Firebase Admin SDK
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    res.status(200).json({ valid: true, decodedToken });
+  } catch (error) {
+    res.status(401).json({ error: "Invalid token", details: error.message });
   }
 };

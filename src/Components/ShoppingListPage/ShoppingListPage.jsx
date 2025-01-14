@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import LoggedInNavbar from "../Navbar/LoggedInNavbar";
+import axios from 'axios';
+
 
 const ShoppingListPage = () => {
   const [items, setItems] = useState([]);
@@ -35,6 +37,26 @@ const ShoppingListPage = () => {
   const filteredItems = items.filter((item) =>
     item.name.toLowerCase().includes(filter.toLowerCase())
   );
+
+  const loginUser = async (email, password) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/users/login', { email, password });
+      const { token } = response.data;
+  
+      // Send token to validateToken route in your backend
+      const validateResponse = await axios.post('http://localhost:5000/auth/validateToken', { token });
+  
+      if (validateResponse.data.valid) {
+        console.log('Token is valid!');
+        // Proceed to ShoppingListPage or set the user state
+      } else {
+        console.error('Token validation failed');
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+  
 
   return (
     
