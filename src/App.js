@@ -10,6 +10,7 @@ import ShoppingListPage from "./Components/ShoppingListPage/ShoppingListPage";
 import Navbar from './Components/Navbar/Navbar';
 import LoggedInNavbar from './Components/Navbar/LoggedInNavbar';
 import { AuthProvider, AuthContext } from './AuthContext';
+import ProtectedRoute from './ProtectedRoute.js'; // Import ProtectedRoute
 
 function App() {
   const { isLoggedIn } = useContext(AuthContext);
@@ -22,9 +23,11 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/shopping-list" element={<ShoppingListPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/details" element={<DetailsPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/shopping-list" element={<ShoppingListPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/details" element={<DetailsPage />} />
+          </Route>
         </Routes>
       </Router>
     </div>
