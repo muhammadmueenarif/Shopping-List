@@ -1,14 +1,15 @@
 const { db, admin } = require("../firebaseConfig");
-const User = require("../Models/UserModels"); // You'll need to create a User model
 const bcrypt = require("bcryptjs"); // Import bcrypt for password hashing
 exports.signup = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    // Check if the user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: "User already exists" });
-    }
+   // Check if the user already exists in Firestore 
+   const usersRef = db.collection('users'); 
+   const snapshot = await usersRef.where('email', '==', email).get(); 
+   if (!snapshot.empty) { 
+    return res.status(400).json({ error: "User already exists" }); 
+  }
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -38,10 +39,8 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
   try {
     // Fetch the user from MongoDB
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+  // Fetch the user from Firebase Authentication 
+  const userRecord = await admin.auth().getUserByEmail(email);
 
     // Check if the password matches
     const isMatch = await bcrypt.compare(password, user.password);
@@ -50,8 +49,9 @@ exports.login = async (req, res) => {
     }
 
     // Generate a Firebase Auth token
-    const userRecord = await admin.auth().getUserByEmail(email);
-    const idToken = await admin.auth().createCustomToken(userRecord.uid); // In a real-world app, you would verify the password and return a Firebase Auth token
+    const userLoginRecord = await admin.auth().getUserByEmail(email);
+    // Verify the password (in a real-world app, you should securely store and verify passwords)
+    const idToken = await admin.auth().createCustomToken(userLoginRecord.uid); // In a real-world app, you would verify the password and return a Firebase Auth token
     res.status(200).json({ token: idToken });
   } catch (error) {
     res
