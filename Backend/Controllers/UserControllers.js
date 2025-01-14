@@ -44,11 +44,13 @@ exports.login = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     const userDoc = snapshot.docs[0];
-    const user = userDoc.data(); // Check if the password matches
+    const user = userDoc.data(); 
+    // Check if the password matches
     const isMatch = await bcrypt.compare(password, user.hashedPassword);
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid credentials" });
-    } // Generate a Firebase Auth token
+    } 
+    // Generate a Firebase Auth token
     const idToken = await admin.auth().createCustomToken(userDoc.id);
     res.status(200).json({ token: idToken });
   } catch (error) {
