@@ -17,17 +17,24 @@ const ProfilePage = () => {
   useEffect(() => { // Fetch user profile data when the component mounts 
     const fetchProfile = async () => {
       try {
+        
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId'); // Get the userId from localStorage
-        
+
+        if (!token || !userId) {
+          throw new Error("Token or userId is missing");
+        }
+
         // Send both token and userId in headers
         const response = await API.get('/users/profile',
           {
             headers: { 
               Authorization: `Bearer ${token}`,
             'User-Id': userId // Add the userId in the headers 
-            }
+            },
           });
+
+        console.log(response.data);  // Add this line to inspect the response data
         const { profileImage, about } = response.data;
         setProfileImage(profileImage); 
         setAbout(about);

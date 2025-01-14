@@ -20,7 +20,10 @@ const LoginPage = () => {
     setError("");
     try {
       const response = await API.post('/users/login', { email: emailOrUsername, password });
-      login(response.data.token);
+      const { token, userId } = response.data; // Extract token and userId from the response
+      localStorage.setItem('token', token); // Store token in localStorage
+      localStorage.setItem('userId', userId); // Store userId in localStorage
+      login(token); // Call the login function from AuthContext  
       navigate("/shopping-list");
     } catch (err) {
       setError(err.response ? err.response.data.error : "Error logging in");

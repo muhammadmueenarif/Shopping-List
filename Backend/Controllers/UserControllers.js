@@ -47,20 +47,26 @@ exports.login = async (req, res) => {
     }
     const userDoc = snapshot.docs[0];
     const user = userDoc.data(); 
+
     // Check if the password matches
     const isMatch = await bcrypt.compare(password, user.hashedPassword);
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid credentials" });
-    } 
+    }
+
+    // Return the user's UID
+    return res.status(200).json({ userId: userDoc.id });
+
     // Generate a Firebase Auth token
     const idToken = await admin.auth().createCustomToken(userDoc.id);
-    res.status(200).json({ token: idToken });
+
+    // Return token and userId to the frontend
+    return res.status(200).json({ token: idToken, userId: userDoc.id });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error logging in user", details: error.message });
+    return res.status(500).json({ error: "Error logging in user", details: error.message });
   }
 };
+
 
 //update profile image and about
 exports.updateProfile = async (req, res) => { 
@@ -85,26 +91,38 @@ exports.updateProfile = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
-    // Extract userId from the request headers
-    const userId = req.headers['user-id']; // Read userId from the header
-
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID is missing' });
+    const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Authorization header
+    
+    if (!token) {
+      return res.status(400).json({ error: 'Token is missing' });
     }
+
+    const userId = req.headers['user-id'];
+
+    console.log('Token:', token);
+    console.log('User  ID:', userId);
+
+    if (!token || !userId) {
+      return res.status(400).json({ error: 'Token or User ID is missing' });
+    }
+
+    // verify token
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    console.log('Decoded Token:', decodedToken);
 
     const userRef = db.collection('users').doc(userId);
     const userDoc = await userRef.get();
-
     if (!userDoc.exists) {
       return res.status(404).json({ error: 'User profile not found' });
     }
-
     return res.status(200).json(userDoc.data());
   } catch (error) {
-    console.error('Error fetching user profile:', error);
+    console.error('Error fetching user profile:', error); // Log the error for debugging
     return res.status(500).json({ error: 'Error fetching user profile', details: error.message });
   }
 };
+
+
 
 exports.validateToken = async (req, res) => {
   const { token } = req.body;
