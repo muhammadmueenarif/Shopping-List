@@ -28,6 +28,9 @@ const LoggedInNavbar = () => {
             <span className="text-lg font-bold">☰</span>
           </Menu.Button>
           <Menu.Items className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2">
+          <Menu.Item as={Link} to="/shopping-list" className={({ active }) => `${active ? 'bg-blue-100' : ''} block px-4 py-2 text-sm text-gray-700`}> 
+              Shopping List 
+            </Menu.Item>
             <Menu.Item as={Link} to="/profile" className={({ active }) => `${active ? 'bg-blue-100' : ''} block px-4 py-2 text-sm text-gray-700`}> 
               Profile 
             </Menu.Item>

@@ -124,8 +124,9 @@ const ProfilePage = () => {
     <div> <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full max-w-md">
         <h2 className="text-xl font-bold mb-4 text-center">Profile</h2>
-        <div className="mb-4 flex flex-col items-center"> {profileImage ? (<img src={profileImage}
-          alt="Profile" className="h-24 w-24 bg-blue-400 rounded-full mb-4" />)
+        <div className="mb-4 flex flex-col items-center"> {profileImage ? (
+          <img src={profileImage}
+          alt="Profile" className="h-24 w-24 bg-cover bg-blue-400 rounded-full mb-4" />)
 
           : (<div className="h-24 w-24 rounded-full bg-gray-300 flex items-center justify-center text-gray-500 mb-4">
             No Image </div>

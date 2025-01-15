@@ -1,4 +1,5 @@
 const { db, admin } = require("../firebaseConfig");
+const fs = require('fs'); // Import the file system module
 const multer = require("multer");
 const bcrypt = require("bcryptjs"); // Import bcrypt for password hashing
 const upload = multer({ dest: "uploads/" }); // Set the destination for file uploads
@@ -82,6 +83,15 @@ exports.updateProfile = async (req, res) => {
       console.error("User not found");
       return res.status(404).json({ error: "User not found" });
     }
+    const userData = user.data();
+    const oldProfileImage = userData.profileImage;
+    
+    // Delete the old profile image if it exists 
+    if (oldProfileImage && fs.existsSync(oldProfileImage)) { 
+      fs.unlinkSync(oldProfileImage); 
+      console.log(`Deleted old profile image: ${oldProfileImage}`); 
+    }
+
     const updateData = { about };
     if (profileImage) {
       updateData.profileImage = profileImage;
