@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useContext } from "react";
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
-import API from '../../api/api';
 import Footer from "../Footer/Footer";
 import { AuthContext } from '../../AuthContext';
+import { signIn, auth } from '../../firebase/firebaseConfig'; // Import the signIn function and auth constant
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -19,14 +19,18 @@ const LoginPage = () => {
     setLoading(true);
     setError("");
     try {
-      const response = await API.post('/users/login', { email: emailOrUsername, password });
-      const { token, userId } = response.data; // Extract token and userId from the response
-      localStorage.setItem('token', token); // Store token in localStorage
-      localStorage.setItem('userId', userId); // Store userId in localStorage
-      login(token); // Call the login function from AuthContext  
-      navigate("/shopping-list");
+      const idToken = await signIn(emailOrUsername, password);
+      if (idToken) {
+        localStorage.setItem('token', idToken); // Store token in localStorage
+        const userId = auth.currentUser.uid;
+        localStorage.setItem('userId', userId); // Store userId in localStorage
+        login(idToken); // Call the login function from AuthContext
+        navigate("/shopping-list");
+      } else {
+        setError("Error logging in");
+      }
     } catch (err) {
-      setError(err.response ? err.response.data.error : "Error logging in");
+      setError(err.message || "Error logging in");
     } finally {
       setLoading(false);
     }
