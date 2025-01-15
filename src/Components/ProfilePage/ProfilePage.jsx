@@ -62,13 +62,18 @@ const ProfilePage = () => {
     setError("");
 
     const formData = new FormData();
+    const userId = localStorage.getItem('userId'); // Ensure you have userId stored in localStorage 
+
+    formData.append('userId', userId);
+    formData.append('about', about);
+
     if (profileImage && profileImage.startsWith('data:image')) {
       const blob = await (await fetch(profileImage)).blob();
       formData.append('profileImage', new File([blob], 'profileImage.png',
         { type: blob.type }));
-    }
-    const userId = localStorage.getItem('userId'); // Ensure you have userId stored in localStorage 
-    formData.append('userId', userId);
+    } else if (profileImage) { 
+      formData.append('profileImage', profileImage); 
+    } 
 
     try {
       const token = localStorage.getItem('token');

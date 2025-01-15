@@ -71,6 +71,11 @@ exports.updateProfile = async (req, res) => {
   try {
     const { userId, about } = req.body;
     const profileImage = req.file ? req.file.path : null;
+    
+    console.log("Received userId:", userId);
+    console.log("Received about:", about);
+    console.log("Received profileImage:", profileImage);
+    
     const userRef = db.collection("users").doc(userId);
     const user = await userRef.get();
     if (!user.exists) {
@@ -92,6 +97,7 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ error: "Error updating profile", details: error.message });
   }
 };
+
 
 exports.getProfile = async (req, res) => {
   try {
